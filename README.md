@@ -1,4 +1,4 @@
-### README for Autonomous ROSbot Navigation and Object Tracking Project
+### Autonomous ROSbot Navigation and Object Tracking Project
 
 **Project Name**: Autonomous Ground Robot Navigation: Object Detection and Tracking with ROSbot 2 Pro Using Dynamic Window Approach and Computer Vision  
 **Course**: Programming Autonomous Robots (COSC2781)  

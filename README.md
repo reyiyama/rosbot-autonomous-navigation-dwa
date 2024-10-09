@@ -1,4 +1,4 @@
-<img width="1109" alt="Screenshot 2024-10-09 at 11 30 42 AM" src="https://github.com/user-attachments/assets/1dbf9735-6e10-4548-aafc-f8c411aa222f">### README for Autonomous ROSbot Navigation Project
+### README for Autonomous ROSbot Navigation Project
 
 **Project Name**: Approximate Object Location and Tracking with UAVs on ROSbot 2 Pro  
 **Course**: Programming Autonomous Robots (COSC2781)  

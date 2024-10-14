@@ -1,4 +1,7 @@
-### Autonomous ROSbot Navigation and Object Tracking Project
+### Autonomous Navigation and Object Tracking Project on ROSbot 2 PRO
+
+![image](https://github.com/user-attachments/assets/2b653b59-3105-4ddb-9a19-445ca08acec9)
+
 
 **Project Name**: Autonomous Ground Robot Navigation: Object Detection and Tracking with ROSbot 2 Pro Using Dynamic Window Approach and Computer Vision  
 **Course**: Programming Autonomous Robots (COSC2781)  
@@ -109,32 +112,146 @@ This project demonstrates the capabilities of autonomous ground robots, particul
   
 ---
 
-### File Structure
+### Detailed Directory Structure Explanation
 
-- `navigation_publisher.py`: Implements the basic wall-following navigation algorithm.
-- `dwa_navigator.py`: Contains the DWA-based advanced navigation system.
-- `aruco_marker.py`: Implements Aruco marker detection and action responses.
-- `launch/`: Contains launch files for setting up the ROS environment.
-- `data/`: Sample datasets and logs from testing runs.
+Here's an explanation of the main components of the `aruco_detector` node:
 
-### How to Run
+#### 1. `aruco_detector/` (Root Directory)
+   This directory contains the core implementation of the Aruco detection and navigation system.
 
-1. Clone the repository and navigate to the root directory.
-2. Launch the simulation:
+#### 2. **Files in `aruco_detector`**:
+   - `__init__.py`: Marks this directory as a Python package.
+   - `aruco.py`: Contains the main Aruco marker detection logic, responsible for identifying fiducial markers in the robot's environment.
+   - `aruco_generator.py`: A utility script for generating custom Aruco markers.
+   - `aruco_marker_action.py`: Defines specific actions for the robot to take when a marker is detected (e.g., stopping, turning, etc.).
+   - `dwa_navigator.py`: Implements the **Dynamic Window Approach (DWA)** for real-time obstacle avoidance and navigation.
+   - `navigate.py`: Handles the basic navigation logic for the robot, including movement and simple obstacle avoidance.
+
+#### 3. **Launch Directory** (`launch/`):
+   - `exploration.launch.py`: A launch file that initializes the ROS2 nodes required for the project. This file sets up the navigation, Aruco marker detection, and other essential nodes.
+
+#### 4. **Resource Directory** (`resource/`):
+   - `objects/`: A directory for storing any resources or objects related to the project, such as images or 3D models.
+   - `aruco_detector/`: The main resource folder related to the Aruco marker detection system.
+
+#### 5. **Test Directory** (`test/`):
+   - `test_copyright.py`, `test_flake8.py`, `test_pep257.py`: These files are for testing the codebase and ensuring it adheres to copyright rules and coding standards (e.g., PEP257).
+
+#### 6. **Other Project Files**:
+   - `CMakesList.txt`: Contains the configuration for building the ROS2 packages using CMake.
+   - `package.xml`: Describes the ROS package, listing its dependencies and other metadata.
+   - `setup.py` and `setup.cfg`: Configuration files for setting up the Python package.
+
+---
+
+### Prerequisites Before Running
+
+Before running the project, ensure the following prerequisites are in place:
+
+1. **ROS2 Humble**: This project is designed for ROS2 Humble, which is run using Docker on the ROSBot 2 Pro. Make sure you have the necessary Docker setup to run ROS2 on the ROSBot.
+   
+2. **Docker and AIIL Setup**:
+   - The ROSBot uses pre-configured Docker containers to handle the ROS2 stack. Ensure that the Docker containers are correctly set up.
+   - Run the script to start the ROSBot stack:
+     ```bash
+     ~/ros_driver_start.sh all
+     ```
+
+3. **AIIL Docker Container**:
+   - You will be using a custom Docker container provided by the AIIL repository. To start this container and access the ROS2 environment:
+     ```bash
+     ~/docker_aiil.sh
+     ```
+
+4. **Source ROS Setup Script**:
+   - After the Docker container is running, navigate to the `/ros_ws` directory where the ROS workspace is located. Before building and running nodes, you must source the ROS setup file:
+     ```bash
+     source install/setup.bash
+     ```
+
+5. **Colcon Build**:
+   - Build the ROS2 workspace inside the Docker container using `colcon`:
+     ```bash
+     colcon build
+     ```
+
+6. **Set ROS Domain**:
+   - Set the ROS Domain ID for the specific ROSBot you are using. This step ensures that your ROS2 nodes can communicate with the robot:
+     ```bash
+     set_ros_domain <robot_name>
+     ```
+   - Example:
+     ```bash
+     set_ros_domain tardis
+     ```
+
+---
+
+### Updated Steps to Run the Project
+
+Once all the prerequisites are in place, follow these steps to run the project:
+
+1. **Clone the Repository**:
+   If you haven't already, clone the repository to your workspace:
    ```bash
-   ros2 launch rosbot_navigation simulation_launch.py
+   git clone https://github.com/reyiyama/rosbot-autonomous-navigation-dwa/
    ```
-3. To test the Aruco marker detection system:
+
+2. **Start the ROSBot Software Stack**:
+   On the ROSBot 2 Pro, start the ROS software stack:
    ```bash
-   ros2 run rosbot_navigation aruco_marker_node
+   ~/ros_driver_start.sh all
+   ```
+
+3. **Launch AIIL Docker Container**:
+   To access the ROS2 environment, enter the Docker container prepared for this project:
+   ```bash
+   ~/docker_aiil.sh
+   ```
+
+4. **Navigate to Workspace**:
+   Inside the Docker container, navigate to the workspace directory:
+   ```bash
+   cd /ros_ws
+   ```
+
+5. **Build the Project**:
+   Build the ROS packages using `colcon`:
+   ```bash
+   colcon build
+   ```
+
+6. **Source Setup File**:
+   After building, source the setup file to make your newly built nodes available:
+   ```bash
+   source install/setup.bash
+   ```
+
+7. **Set ROS Domain**:
+   Set the ROS domain for the specific ROSBot you're working with (e.g., "tardis"):
+   ```bash
+   set_ros_domain tardis
+   ```
+
+8. **Launch the Exploration Nodes**:
+   Launch the necessary ROS nodes for navigation and Aruco marker detection:
+   ```bash
+   ros2 launch aruco_detector exploration.launch.py
+   ```
+
+9. **Run Aruco Marker Detection**:
+   To test the Aruco marker detection system and execute the associated actions:
+   ```bash
+   ros2 run aruco_detector aruco_marker_action
    ```
 
 ---
 
 ### Future Improvements
-- **Enhanced SLAM techniques**: Implement advanced mapping algorithms to improve localization accuracy.
-- **Improved Marker Pointing**: Integrate better computer vision models for more precise marker interaction.
-- **Machine Learning**: Incorporate machine learning techniques for smarter obstacle recognition and adaptive path planning.
+
+- **Enhanced SLAM Techniques**: Implement more advanced SLAM algorithms for better mapping and localization.
+- **Optimized Marker Detection**: Explore better computer vision models or neural networks for more accurate marker detection and interaction.
+- **Machine Learning for Obstacle Avoidance**: Incorporate reinforcement learning techniques to make the robot's navigation system smarter and more adaptable to dynamic environments.
 
 ---
 

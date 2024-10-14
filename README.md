@@ -109,8 +109,7 @@ The software follows a **three-tiered architecture** that separates high-level d
 #### Sense-Plan-Act Cycle:
 The project loosely follows a **Sense-Plan-Act** architecture:
 
-
-<img width="976" alt="Screenshot 2024-10-09 at 11 29 38 AM" src="https://github.com/user-attachments/assets/16b6c89b-2380-44b4-9ea2-afb51b956297">
+<img width="1638" alt="Screenshot 2024-10-15 at 2 09 51 AM" src="https://github.com/user-attachments/assets/bb81bda6-b73e-40c1-83a0-33ebb59a9a96">
 
 - **Sense**: Sensors (e.g., laser scanner, odometry, marker detection) gather environmental data, which is processed by subscribers like `odom_callback()` and `scan_callback()`.
 - **Plan**: The **Deliberative Layer** plans actions based on the sensed data, using methods like `handle_markers()` to decide on marker-specific behaviors or obstacle avoidance strategies.
@@ -121,7 +120,7 @@ The project loosely follows a **Sense-Plan-Act** architecture:
 #### Dynamic Window Approach (DWA):
 DWA, chosen for its suitability in fast-paced, dynamic environments, generates safe and efficient velocity commands based on the robot's sensor inputs and dynamics. This allows the robot to navigate complex environments with real-time obstacle avoidance.
 
-<img width="1638" alt="Screenshot 2024-10-15 at 2 09 51 AM" src="https://github.com/user-attachments/assets/bb81bda6-b73e-40c1-83a0-33ebb59a9a96">
+<img width="976" alt="Screenshot 2024-10-09 at 11 29 38 AM" src="https://github.com/user-attachments/assets/16b6c89b-2380-44b4-9ea2-afb51b956297">
 
 ---
 

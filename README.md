@@ -20,24 +20,34 @@ This project explores the development of an autonomous navigation system for the
 
 ---
 
-### Importance of Ground Robotics and Computer Vision
+### Importance of Ground Robotics, Computer Vision, and IMAV-Inspired Navigation
 
-**Computer Vision**, **Ground Robotics**, **SLAM**, and other robotics mechanisms are pivotal technologies that drive advancements in **autonomous robotics** and **self-driving vehicles**. These technologies are essential because they enable robots and vehicles to understand and interact with their environments autonomously.
+<img width="744" alt="Screenshot 2024-10-15 at 2 18 45 AM" src="https://github.com/user-attachments/assets/2c97e085-dcd0-42bd-82cb-0b8211f943d4">
 
-1. **Computer Vision**: By employing computer vision techniques, robots can detect and track objects, landmarks, and obstacles in real time. This is especially important for tasks like **object tracking**, **obstacle detection**, and **navigation**, which are essential in applications ranging from autonomous driving to industrial robots. In this project, the use of **Aruco markers** showcases how fiducial markers help robots understand their surroundings and perform specific tasks based on marker detection.
 
-2. **SLAM (Simultaneous Localization and Mapping)**: SLAM is crucial for robots to build a map of unknown environments while simultaneously localizing themselves within that map. In the context of self-driving cars and autonomous robots, SLAM allows the vehicle or robot to navigate dynamic and unstructured environments. This project incorporates SLAM to enable the ROSbot 2 Pro to explore and map its surroundings, allowing it to perform navigation and tracking tasks autonomously.
+**Ground Robotics**, **Computer Vision**, **SLAM**, and other autonomous robotics technologies are at the forefront of modern advancements, particularly in autonomous vehicles and unstructured environment navigation. This project draws heavily from the **IMAV 2024 UAV competition** tasks, which focus on search, navigation, and visual localization in dynamic environments. Adapting these aerial challenges to a ground-based robot platform, like the **ROSbot 2 Pro**, highlights the versatility of ground robotics and extends the benefits of object detection, obstacle avoidance, and navigation to terrestrial robots.
 
-3. **Dynamic Window Approach (DWA)**: DWA is a local path-planning algorithm that enables robots to dynamically avoid obstacles and plan optimal trajectories in real-time. For autonomous ground vehicles, this is essential for ensuring safety, efficiency, and adaptability in ever-changing environments.
+1. **Computer Vision**: Leveraging **Aruco markers** as fiducial points, the robot interprets its environment visually and performs actions based on detection. This capability is crucial not only in aerial drones but also in ground-based platforms where markers provide reliable positioning and task coordination. The ROSbot 2 Pro, equipped with camera systems, can track these markers, which facilitates tasks such as obstacle navigation and localized interactions. By extending this to a ground context, it showcases how computer vision enhances real-time object recognition, localization, and operational tasks—central to industries like autonomous driving, logistics, and robotics.
 
-4. **Ground Robotics**: Ground robots, like the ROSbot 2 Pro, play a significant role in applications where longer operational times and heavier payload capacities are required compared to aerial systems. The project's focus on ground robotics is relevant for industries like agriculture, search and rescue, and infrastructure inspection, where such robots can operate for extended periods in harsh environments and navigate complex terrains.
+2. **SLAM (Simultaneous Localization and Mapping)**: SLAM techniques allow robots to map unknown environments while simultaneously determining their location within them. In competitions like IMAV, SLAM is key for UAVs to navigate and localize in dynamic spaces. For ground robots like the ROSbot 2 Pro, SLAM becomes equally vital in building internal maps of environments, which aids in navigation and marker-based task execution. This is especially important in settings like indoor competition circuits, where environments are less structured.
+
+3. **Dynamic Window Approach (DWA)**: The **Dynamic Window Approach** plays a central role in the project’s navigation system. In environments filled with obstacles (as in the IMAV competition), DWA enables the robot to efficiently compute collision-free trajectories in real time. Ground robots, especially wheeled platforms like the ROSbot 2 Pro, benefit from DWA due to its suitability for real-time navigation in dynamic, cluttered spaces. This method enhances the robot's adaptability, ensuring it can safely navigate both structured and unstructured environments while adhering to its non-holonomic constraints.
+
+4. **Ground Robotics and Extended Applications**: While UAVs dominate aerial navigation tasks, ground robots like the ROSbot 2 Pro offer distinct advantages in operational time, payload handling, and ground-based interaction. By adapting aerial competition tasks to ground-based challenges, the ROSbot demonstrates how ground robotics can handle complex tasks such as sample collection, exploration, and interaction. This is particularly relevant to fields like agriculture, search and rescue, infrastructure monitoring, and wildlife conservation, where extended interaction with the environment is crucial.
+
+---
 
 ### Relevance of Exploring These Mechanisms:
-- **Self-Driving Vehicles**: The integration of computer vision, SLAM, and obstacle avoidance is fundamental in self-driving technologies, where vehicles must continuously interpret their environment and make decisions in real-time to ensure safe operation.
-- **Search and Rescue Operations**: In disaster zones or hazardous environments, autonomous ground robots equipped with object detection and mapping technologies can assist in locating survivors or assessing damage without putting human lives at risk.
-- **Industrial and Agricultural Applications**: Robots that can autonomously navigate large, complex environments—such as warehouses, factories, or fields—can enhance efficiency and reduce human intervention, particularly in tasks like inventory management or precision farming.
+- **Self-Driving Vehicles**: The integration of SLAM, computer vision, and obstacle avoidance, as demonstrated in this project, is fundamental to the advancement of self-driving vehicles. Such systems must continuously interpret their environments and make real-time decisions to ensure safe and efficient navigation.
   
-By studying and implementing these technologies in autonomous robots, we contribute to the future of robotics where machines are more intelligent, efficient, and capable of handling increasingly complex tasks.
+- **Search and Rescue Operations**: Autonomous ground robots equipped with the ability to navigate unstructured environments and identify fiducial markers can play a significant role in search and rescue missions, where rapid localization of individuals or objects is crucial.
+
+- **Industrial and Agricultural Applications**: Autonomous robots capable of navigating large, complex environments can enhance operational efficiency in sectors like agriculture and manufacturing. These robots can be used for inventory management, precision farming, and infrastructure inspection, reducing human intervention and improving productivity.
+
+By adapting the challenges posed by the **IMAV 2024 competition** to a ground-based robot like the **ROSbot 2 Pro**, this project contributes to the development of more intelligent and efficient ground robots capable of handling increasingly complex tasks in diverse environments. Below is a diagram of the original IMAV 2024 indoor circuit rules:
+
+<img width="808" alt="Screenshot 2024-10-15 at 2 19 50 AM" src="https://github.com/user-attachments/assets/0df87831-2849-425d-b895-25fc9a716bec">
+
 
 ---
 
@@ -65,27 +75,53 @@ By studying and implementing these technologies in autonomous robots, we contrib
 
 ---
 
-### Methodology
+### Methodology, Implementation, and Software Architecture
 
-#### Three-Tiered Software Architecture
-This architecture enables clean separation of the robot's functionalities:
-- **Deliberative Layer**: Responsible for high-level decision-making and planning using the **DWANavigator class**. This layer gathers sensor data from topics like `/odom` and `/scan` to plan the robot’s goals and determine actions based on marker detection.
-  
-- **Sequencing Layer**: Breaks down high-level commands into sequences of specific actions, such as turning, moving forward, and avoiding obstacles. This layer ensures robust navigation and recovery from stuck scenarios using methods like `avoid_obstacle()` and `recover_from_stuck()`.
-  
-- **Reactive Layer**: Direct interaction with the robot’s actuators, sending velocity commands to the robot based on sensor data. Real-time responses to the environment are handled here, ensuring smooth and reactive motion.
+This project focuses on developing an autonomous navigation system for the **ROSbot 2 Pro**, leveraging ROS 2 for navigating maze-like environments, avoiding obstacles, detecting **Aruco markers**, and performing specific marker-based actions. The project integrates two primary components: the **DWANavigator** node and the **ArucoMarker** node. These components control the ROSbot's movement using the **Dynamic Window Approach (DWA)** for navigation and obstacle avoidance while incorporating marker-based interaction.
+
+#### Key Components:
+- **DWANavigator Node**: Employs the **DWA** algorithm to navigate dynamic environments and avoid obstacles. It subscribes to topics such as `/scan` for laser scan data and `/objects` for marker information.
+- **ArucoMarker Node**: Detects **Aruco markers** and executes actions based on the marker IDs, such as turning or moving to specific positions.
+<img width="656" alt="Screenshot 2024-10-15 at 2 11 13 AM" src="https://github.com/user-attachments/assets/884987ab-b89f-4f70-85de-2f41f4273919">
+
+
+#### Software Architecture:
+The software follows a **three-tiered architecture** that separates high-level decision-making, sequencing, and hardware interaction:
 
 <img width="1077" alt="Screenshot 2024-10-09 at 11 27 22 AM" src="https://github.com/user-attachments/assets/c788ba69-25a9-4d91-97fd-01085ce408f7">
 
-#### Sense-Plan-Act Architecture
-Our system incorporates elements of the **Sense-Plan-Act (SPA)** architecture. It collects data from sensors (`/scan`, `/odom`), processes it in the planning layer, and executes behaviors using the actuation layer, providing a robust method for real-time decision-making in dynamic environments.
+1. **Deliberative Layer**:
+   - **High-Level Decision Making**: This layer, represented by the **DWANavigator class**, gathers sensor data (e.g., odometry, laser scans) and makes decisions on the robot's navigation goals and actions.
+   - **Marker Handling**: The `handle_markers()` method processes detected markers and determines the robot's response based on the marker ID, such as spinning or returning to a prior position.
+   - **Navigation**: The **navigate()** method plans navigation and returns the robot to its starting position if necessary, while the **return_to_position()** method uses the ROS2 Navigation stack to navigate to specific locations.
+
+2. **Sequencing Layer**:
+   - **Action Breakdown**: The sequencing layer translates high-level decisions into specific robot actions. Methods like `spin_360()`, `turn_right()`, and `avoid_obstacle()` execute sequences of movements, ensuring the robot follows the planned path.
+   - **Obstacle Avoidance and Recovery**: Functions such as `avoid_obstacle()` handle real-time obstacle avoidance, and `recover_from_stuck()` assists the robot in escaping tight or stuck situations.
+
+3. **Reactive Layer**:
+   - **Direct Hardware Interaction**: This layer interacts directly with the robot's actuators and sensors. The `/cmd_vel` publisher sends velocity commands to the robot, while subscribers for `/odom`, `/scan`, and `/objects` process sensor data in real time.
+   - **Real-Time Sensor Processing**: The robot continuously adjusts its actions based on the latest sensor readings, ensuring responsive and adaptive behavior in dynamic environments.
+
+<img width="1559" alt="Screenshot 2024-10-15 at 2 08 56 AM" src="https://github.com/user-attachments/assets/6797096d-1cb9-4e37-a343-71fbc0bda73a">
+
+
+#### Sense-Plan-Act Cycle:
+The project loosely follows a **Sense-Plan-Act** architecture:
+
+
+<img width="976" alt="Screenshot 2024-10-09 at 11 29 38 AM" src="https://github.com/user-attachments/assets/16b6c89b-2380-44b4-9ea2-afb51b956297">
+
+- **Sense**: Sensors (e.g., laser scanner, odometry, marker detection) gather environmental data, which is processed by subscribers like `odom_callback()` and `scan_callback()`.
+- **Plan**: The **Deliberative Layer** plans actions based on the sensed data, using methods like `handle_markers()` to decide on marker-specific behaviors or obstacle avoidance strategies.
+- **Act**: The robot executes the planned actions, publishing velocity commands to move through the environment or interact with detected markers.
 
 <img width="1417" alt="Screenshot 2024-10-09 at 11 28 41 AM" src="https://github.com/user-attachments/assets/9641491f-49b8-40b3-9864-004121fb216e">
 
-#### Dynamic Window Approach (DWA)
-DWA is the core navigation algorithm that optimizes velocity commands based on the robot’s sensor inputs, enabling smooth navigation and obstacle avoidance. This approach is ideal for environments with dynamic obstacles, as it continuously updates the robot's path.
+#### Dynamic Window Approach (DWA):
+DWA, chosen for its suitability in fast-paced, dynamic environments, generates safe and efficient velocity commands based on the robot's sensor inputs and dynamics. This allows the robot to navigate complex environments with real-time obstacle avoidance.
 
-<img width="976" alt="Screenshot 2024-10-09 at 11 29 38 AM" src="https://github.com/user-attachments/assets/16b6c89b-2380-44b4-9ea2-afb51b956297">
+<img width="1638" alt="Screenshot 2024-10-15 at 2 09 51 AM" src="https://github.com/user-attachments/assets/bb81bda6-b73e-40c1-83a0-33ebb59a9a96">
 
 ---
 
